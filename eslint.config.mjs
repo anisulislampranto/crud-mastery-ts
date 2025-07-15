@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import { defineConfig } from "eslint/config";
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 
 export default defineConfig([
@@ -13,9 +14,10 @@ export default defineConfig([
       "no-unused-expressions": "error",
       "prefer-const": "error",
       "no-console": "warn",
-      "no-undef":'error'
+      "no-undef":"error"
     }
   },
   { ignores: [".node_modules/*", './dist']},
   tseslint.configs.recommended,
+  eslintPluginPrettierRecommended
 ]);
