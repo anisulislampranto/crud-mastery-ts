@@ -1,5 +1,5 @@
 import { Schema, model, connect } from 'mongoose';
-import { Address, fullName, Order, User, User } from './user/user.interface'
+import { Address, fullName, Order, User, } from './user/user.interface'
 
 const fullNameSchema = new Schema<fullName>({
     firstName: {
