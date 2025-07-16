@@ -1,29 +1,29 @@
-export type userName = {
+export type fullName = {
     firstName: string;
     lastName: string;
 }
 
-export type address = {
+export type Address = {
     street: string;
     city: string;
     country: string;
 }
 
-export type order = {
+export type Order = {
     productName: string;
     price: number;
     quantity: number;
 }
 
-export type user = {
+export type User = {
     userId: number;
-    username: string;
+    username: String;
     password: string;
-    fullName: userName;
+    fullName: fullName;
     age: number;
     email: string;
     isActive: boolean;
     hobbies?: [string];
-    address?: address;
-    orders?: [order]
+    address?: Address;
+    orders?: [Order]
 }
