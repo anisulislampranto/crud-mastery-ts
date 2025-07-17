@@ -16,8 +16,14 @@ const getUserFromDB = async (userId: string) => {
     return user
 }
 
+const deleteUserFromDB = async (userId: string) => {
+    const user = await UserModel.deleteOne({ _id: userId })
+    return user
+}
+
 export const UserServices = {
     createUserIntoDB,
     getUsersFromDB,
-    getUserFromDB
+    getUserFromDB,
+    deleteUserFromDB
 }

@@ -37,11 +37,11 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        const users = await UserServices.getUserFromDB(userId)
+        const user = await UserServices.getUserFromDB(userId)
         res.status(200).json({
             success: true,
             message: 'Fetched User!',
-            data: users
+            data: user
         })
     } catch (error) {
         res.status(403).json({
@@ -51,8 +51,25 @@ const getUser = async (req: Request, res: Response) => {
     }
 }
 
+const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        await UserServices.deleteUserFromDB(userId)
+        res.status(200).json({
+            success: true,
+            message: 'Deleted User!',
+        })
+    } catch (error) {
+        res.status(403).json({
+            success: false,
+            message: 'Failed to delete users!',
+        })
+    }
+}
+
 export const StudentControllers = {
     createUser,
     getAllUsers,
-    getUser
+    getUser,
+    deleteUser
 }
