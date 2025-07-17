@@ -51,6 +51,25 @@ const getUser = async (req: Request, res: Response) => {
     }
 }
 
+const updateUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const userData = req.body
+        const updatedUser = await UserServices.updateUserFromDB(userId, userData)
+        res.status(200).json({
+            success: true,
+            message: 'User info updated!',
+            data: updatedUser
+        })
+    } catch (error) {
+        console.log('error', error)
+        res.status(403).json({
+            success: false,
+            message: error,
+        })
+    }
+}
+
 const deleteUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
@@ -71,5 +90,6 @@ export const StudentControllers = {
     createUser,
     getAllUsers,
     getUser,
-    deleteUser
+    deleteUser,
+    updateUser
 }
