@@ -11,10 +11,30 @@ const createUser = async (req: Request, res: Response) => {
             data: createdUser
         })
     } catch (error) {
-        console.log(error);
+        res.status(403).json({
+            success: false,
+            message: 'Failed to create user!',
+        })
+    }
+}
+
+const getAllUsers = async (req: Request, res: Response) => {
+    try {
+        const users = await UserServices.getUsersFromDB()
+        res.status(200).json({
+            success: true,
+            message: 'Fetched all users!',
+            data: users
+        })
+    } catch (error) {
+        res.status(403).json({
+            success: false,
+            message: 'Failed to get users!',
+        })
     }
 }
 
 export const StudentControllers = {
-    createUser
+    createUser,
+    getAllUsers
 }
