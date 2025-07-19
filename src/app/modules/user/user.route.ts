@@ -11,6 +11,7 @@ router.delete('/:userId', StudentControllers.deleteUser)
 
 // order
 router.put('/:userId/orders', StudentControllers.createOrder)
+router.get('/:userId/orders', StudentControllers.getUserOrders)
 
 
 

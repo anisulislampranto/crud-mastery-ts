@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { UserModel } from "../user.model";
 import { Order, User } from "./user.interface";
 
@@ -17,7 +18,7 @@ const getUserFromDB = async (userId: string) => {
 }
 
 const updateUserFromDB = async (userId: string, userData: User) => {
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, userData, {new: true})
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, userData, { new: true })
     return updatedUser
 }
 
@@ -27,8 +28,20 @@ const deleteUserFromDB = async (userId: string) => {
 }
 
 const createUserOrderOnDB = async (userId: string, data: Order) => {
-    const createdOrder = await UserModel.updateOne({ _id: userId }, {$addToSet: {orders: data}})
+    const createdOrder = await UserModel.updateOne({ _id: userId }, { $addToSet: { orders: data } })
     return createdOrder
+}
+
+const getUserOrdersFromDB = async (userId: string) => {
+    const userOrders = await UserModel.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(userId) }
+        },
+        {
+            $project: { orders: 1 }
+        }
+    ])
+    return userOrders
 }
 
 export const UserServices = {
@@ -37,5 +50,6 @@ export const UserServices = {
     getUserFromDB,
     deleteUserFromDB,
     updateUserFromDB,
-    createUserOrderOnDB
+    createUserOrderOnDB,
+    getUserOrdersFromDB
 }
