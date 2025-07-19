@@ -55,6 +55,9 @@ const gerOrdersTotalPriceOfUserFromDB = async (userId: string) => {
         {
             $group: {_id: null, totalPrice: {$sum: "$orders.price"}}
         },
+        {
+            $project: {_id:0, totalPrice: 1}
+        }
     ])
     return totalPrice
 }
