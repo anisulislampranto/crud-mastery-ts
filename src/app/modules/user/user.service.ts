@@ -44,6 +44,21 @@ const getUserOrdersFromDB = async (userId: string) => {
     return userOrders
 }
 
+const gerOrdersTotalPriceOfUserFromDB = async (userId: string) => {
+    const totalPrice = await UserModel.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(userId) }
+        },
+        {
+            $unwind: "$orders"
+        },
+        {
+            $group: {_id: null, totalPrice: {$sum: "$orders.price"}}
+        },
+    ])
+    return totalPrice
+}
+
 export const UserServices = {
     createUserIntoDB,
     getUsersFromDB,
@@ -51,5 +66,6 @@ export const UserServices = {
     deleteUserFromDB,
     updateUserFromDB,
     createUserOrderOnDB,
-    getUserOrdersFromDB
+    getUserOrdersFromDB,
+    gerOrdersTotalPriceOfUserFromDB
 }

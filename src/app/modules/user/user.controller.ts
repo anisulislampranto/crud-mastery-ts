@@ -125,6 +125,25 @@ const getUserOrders = async (req: Request, res: Response) => {
     }
 }
 
+const gerOrdersTotalPriceOfUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+
+        const totalPrice = await UserServices.gerOrdersTotalPriceOfUserFromDB(userId)
+
+        res.status(200).json({
+            success: true,
+            message: 'Total price calculated successfully',
+            data: totalPrice
+        })
+    } catch (error) {
+        res.status(403).json({
+            success: false,
+            message: 'Failed to get user orders!',
+        })
+    }
+}
+
 export const StudentControllers = {
     createUser,
     getAllUsers,
@@ -132,5 +151,6 @@ export const StudentControllers = {
     deleteUser,
     updateUser,
     createOrder,
-    getUserOrders
+    getUserOrders,
+    gerOrdersTotalPriceOfUser
 }
