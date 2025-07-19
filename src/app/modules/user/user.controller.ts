@@ -1,19 +1,25 @@
 import { Request, Response } from "express";
 import { UserServices } from "./user.service";
+import { User } from "../user.model";
 
 const createUser = async (req: Request, res: Response) => {
     try {
-        const user = req.body;
-        const createdUser = await UserServices.createUserIntoDB(user)
+        const userData = req.body;
+        const user = new User()
+        if (await user.isUserExist(userData.email)) {
+            throw new Error('User Already exist')
+        }
+
+        const createdUser = await UserServices.createUserIntoDB(userData)
         res.status(200).json({
             success: true,
             message: 'User created successfully',
             data: createdUser
         })
-    } catch (error) {
+    } catch (error: any) {
         res.status(403).json({
             success: false,
-            message: 'Failed to create user!',
+            message: error.message || 'Failed to create user!',
         })
     }
 }
@@ -40,7 +46,7 @@ const getUser = async (req: Request, res: Response) => {
         const user = await UserServices.getUserFromDB(userId)
         res.status(200).json({
             success: true,
-            message: 'Fetched User!',
+            message: 'User fetched successfully!',
             data: user
         })
     } catch (error) {
@@ -58,7 +64,7 @@ const updateUser = async (req: Request, res: Response) => {
         const updatedUser = await UserServices.updateUserFromDB(userId, userData)
         res.status(200).json({
             success: true,
-            message: 'User info updated!',
+            message: 'User updated successfully',
             data: updatedUser
         })
     } catch (error) {
@@ -76,7 +82,8 @@ const deleteUser = async (req: Request, res: Response) => {
         await UserServices.deleteUserFromDB(userId)
         res.status(200).json({
             success: true,
-            message: 'Deleted User!',
+            message: 'User deleted successfully!',
+            data: null
         })
     } catch (error) {
         res.status(403).json({
@@ -109,7 +116,6 @@ const createOrder = async (req: Request, res: Response) => {
 const getUserOrders = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-
         const orders = await UserServices.getUserOrdersFromDB(userId)
 
         res.status(200).json({

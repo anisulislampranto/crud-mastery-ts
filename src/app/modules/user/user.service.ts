@@ -1,51 +1,51 @@
 import mongoose from "mongoose";
-import { UserModel } from "../user.model";
-import { Order, User } from "./user.interface";
+import { User } from "../user.model";
+import { TOrder, TUser } from "./user.interface";
 
-const createUserIntoDB = async (user: User) => {
-    const createdUser = await UserModel.create(user)
+const createUserIntoDB = async (user: TUser) => {
+    const createdUser = await User.create(user)
     return createdUser
 }
 
 const getUsersFromDB = async () => {
-    const users = await UserModel.find()
+    const users = await User.find()
     return users
 }
 
 const getUserFromDB = async (userId: string) => {
-    const user = await UserModel.findOne({ _id: userId })
+    const user = await User.findOne({ _id: userId })
     return user
 }
 
-const updateUserFromDB = async (userId: string, userData: User) => {
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, userData, { new: true })
+const updateUserFromDB = async (userId: string, userData: TUser) => {
+    const updatedUser = await User.findByIdAndUpdate(userId, userData, { new: true })
     return updatedUser
 }
 
 const deleteUserFromDB = async (userId: string) => {
-    const user = await UserModel.deleteOne({ _id: userId })
+    const user = await User.deleteOne({ _id: userId })
     return user
 }
 
-const createUserOrderOnDB = async (userId: string, data: Order) => {
-    const createdOrder = await UserModel.updateOne({ _id: userId }, { $addToSet: { orders: data } })
+const createUserOrderOnDB = async (userId: string, data: TOrder) => {
+    const createdOrder = await User.updateOne({ _id: userId }, { $addToSet: { orders: data } })
     return createdOrder
 }
 
 const getUserOrdersFromDB = async (userId: string) => {
-    const userOrders = await UserModel.aggregate([
+    const userOrders = await User.aggregate([
         {
             $match: { _id: new mongoose.Types.ObjectId(userId) }
         },
         {
-            $project: { orders: 1 }
+            $project: { _id: 0, orders: 1 }
         }
     ])
-    return userOrders
+    return userOrders[0]
 }
 
 const gerOrdersTotalPriceOfUserFromDB = async (userId: string) => {
-    const totalPrice = await UserModel.aggregate([
+    const totalPrice = await User.aggregate([
         {
             $match: { _id: new mongoose.Types.ObjectId(userId) }
         },
