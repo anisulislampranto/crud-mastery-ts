@@ -57,10 +57,15 @@ const userSchema = new Schema<TUser, UserModel, UserMethod>({
     orders: [orderSchema]
 });
 
-userSchema.methods.isUserExist = async function(email: string) {
-    const existingUser = await User.findOne({email})
+userSchema.statics.isUserExist = async function(identifier: string) {
+    const existingUser = await User.findOne({
+        $or: [
+            { _id: identifier },
+            { email: identifier }
+        ]
+    });
     return existingUser;
-}
+};
 
 
 export const User = model<TUser, UserModel>("User", userSchema)

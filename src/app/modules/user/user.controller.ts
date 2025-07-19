@@ -43,16 +43,23 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        const user = await UserServices.getUserFromDB(userId)
-        res.status(200).json({
-            success: true,
-            message: 'User fetched successfully!',
-            data: user
-        })
+        const user = new User();
+        if (await user.isUserExist(user.email)) {
+            const userInfo = await UserServices.getUserFromDB(userId)
+            res.status(200).json({
+                success: true,
+                message: 'User fetched successfully!',
+                data: userInfo
+            })
+        } else {
+            throw new Error(`User Doesn't exist!`)
+        }
+        
     } catch (error) {
+        console.log('error', error)
         res.status(403).json({
             success: false,
-            message: 'Failed to get users!',
+            message: 'Failed to get user!',
         })
     }
 }
@@ -60,7 +67,11 @@ const getUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        const userData = req.body
+        const userData = req.body;
+        const user = new User();
+        if (!await user.isUserExist(user.email)) {
+            throw new Error(`User Doesn't exist!`)
+        }
         const updatedUser = await UserServices.updateUserFromDB(userId, userData)
         res.status(200).json({
             success: true,
