@@ -86,10 +86,31 @@ const deleteUser = async (req: Request, res: Response) => {
     }
 }
 
+// create order
+const createOrder = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+
+        await UserServices.createUserOrderOnDB(userId, req.body)
+
+        res.status(200).json({
+            success: true,
+            message: 'Order Created Successfully!',
+            data: null
+        })
+    } catch (error) {
+        res.status(403).json({
+            success: false,
+            message: 'Failed to create order!',
+        })
+    }
+}
+
 export const StudentControllers = {
     createUser,
     getAllUsers,
     getUser,
     deleteUser,
-    updateUser
+    updateUser,
+    createOrder
 }
