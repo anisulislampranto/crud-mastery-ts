@@ -76,16 +76,16 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        await UserServices.deleteUserFromDB(userId)
+        await UserServices.deleteUserFromDB(Number(userId))
         res.status(200).json({
             success: true,
             message: 'User deleted successfully!',
             data: null
         })
-    } catch (error) {
+    } catch (error: any) {
         res.status(403).json({
             success: false,
-            message: 'Failed to delete users!',
+            message: error.message || 'Failed to delete users!',
         })
     }
 }

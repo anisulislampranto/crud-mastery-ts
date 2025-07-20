@@ -42,8 +42,11 @@ const updateUserFromDB = async (userId: number, userData: TUser) => {
     return updatedUser
 }
 
-const deleteUserFromDB = async (userId: string) => {
-    const user = await User.deleteOne({ _id: userId })
+const deleteUserFromDB = async (userId: number) => {
+    if (!await User.isUserExist(userId)) {
+        throw new Error(`User Doesn't exist`)
+    }
+    const user = await User.deleteOne({ userId })
     return user
 }
 
