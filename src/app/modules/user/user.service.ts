@@ -19,8 +19,15 @@ const getUsersFromDB = async () => {
     return users
 }
 
-const getUserFromDB = async (userId: string) => {
-    const user = await User.findOne({ _id: userId })
+const getUserFromDB = async (userId: number) => {
+    const user = await User.aggregate([
+        {
+            $match: { userId }
+        },
+        {
+            $project: { _id: 0, password: 0 }
+        }
+    ])
     return user
 }
 

@@ -27,7 +27,8 @@ const orderSchema = new Schema<TOrder>({
 const userSchema = new Schema<TUser, UserModel>({
     userId: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
     username: {
         type: String,
