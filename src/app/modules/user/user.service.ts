@@ -11,7 +11,11 @@ const createUserIntoDB = async (userData: TUser) => {
 }
 
 const getUsersFromDB = async () => {
-    const users = await User.find()
+    const users = await User.aggregate([
+        {
+            $project: { _id: 0, username: 1, fullName: 1, age: 1, email: 1, address: 1 }
+        }
+    ])
     return users
 }
 
