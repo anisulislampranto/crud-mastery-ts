@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 import { User } from "../user.model";
 import { TOrder, TUser } from "./user.interface";
 
-const createUserIntoDB = async (user: TUser) => {
-    const createdUser = await User.create(user)
+const createUserIntoDB = async (userData: TUser) => {
+    if (await User.isUserExist(userData.userId)) {
+        throw new Error('User Already exist')
+    }
+    const createdUser = await User.create(userData);
     return createdUser
 }
 
@@ -53,10 +56,10 @@ const gerOrdersTotalPriceOfUserFromDB = async (userId: string) => {
             $unwind: "$orders"
         },
         {
-            $group: {_id: null, totalPrice: {$sum: "$orders.price"}}
+            $group: { _id: null, totalPrice: { $sum: "$orders.price" } }
         },
         {
-            $project: {_id:0, totalPrice: 1}
+            $project: { _id: 0, totalPrice: 1 }
         }
     ])
     return totalPrice

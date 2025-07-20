@@ -1,5 +1,5 @@
 import { Schema, model, connect } from 'mongoose';
-import { TAddress, TFullName, TOrder, TUser, UserMethod, UserModel} from './user/user.interface'
+import { TAddress, TFullName, TOrder, TUser, UserMethod, UserModel } from './user/user.interface'
 
 const fullNameSchema = new Schema<TFullName>({
     firstName: {
@@ -24,7 +24,7 @@ const orderSchema = new Schema<TOrder>({
     quantity: Number
 })
 
-const userSchema = new Schema<TUser, UserModel, UserMethod>({
+const userSchema = new Schema<TUser, UserModel>({
     userId: {
         type: Number,
         required: true
@@ -57,15 +57,16 @@ const userSchema = new Schema<TUser, UserModel, UserMethod>({
     orders: [orderSchema]
 });
 
-userSchema.statics.isUserExist = async function(identifier: string) {
-    const existingUser = await User.findOne({
-        $or: [
-            { _id: identifier },
-            { email: identifier }
-        ]
-    });
-    return existingUser;
-};
+// userSchema.statics.isUserExist = async function(identifier: string) {
+//     const existingUser = await User.findOne({ email: identifier });
+//     return existingUser;
+// };
+
+// create custom static method
+userSchema.statics.isUserExist = async function name(userId: string) {
+    const user = User.findOne({ userId })
+    return user
+}
 
 
 export const User = model<TUser, UserModel>("User", userSchema)
