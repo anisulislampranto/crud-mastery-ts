@@ -20,6 +20,9 @@ const getUsersFromDB = async () => {
 }
 
 const getUserFromDB = async (userId: number) => {
+    if (!await User.isUserExist(userId)) {
+        throw new Error(`User Doesn't exist`)
+    }
     const user = await User.aggregate([
         {
             $match: { userId }

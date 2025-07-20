@@ -45,11 +45,11 @@ const getUser = async (req: Request, res: Response) => {
             data: userInfo
         })
         
-    } catch (error) {
+    } catch (error: any) {
         console.log('error', error)
         res.status(403).json({
             success: false,
-            message: 'Failed to get user!',
+            message: error.message || 'Failed to get user!',
         })
     }
 }
