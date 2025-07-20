@@ -132,17 +132,17 @@ const gerOrdersTotalPriceOfUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
 
-        const totalPrice = await UserServices.gerOrdersTotalPriceOfUserFromDB(userId)
+        const totalPrice = await UserServices.gerOrdersTotalPriceOfUserFromDB(Number(userId))
 
         res.status(200).json({
             success: true,
             message: 'Total price calculated successfully',
             data: totalPrice
         })
-    } catch (error) {
+    } catch (error: any) {
         res.status(403).json({
             success: false,
-            message: 'Failed to get user orders!',
+            message: error.message || 'Failed to get user orders!',
         })
     }
 }

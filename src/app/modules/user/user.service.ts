@@ -73,10 +73,13 @@ const getUserOrdersFromDB = async (userId: number) => {
     return userOrders[0]
 }
 
-const gerOrdersTotalPriceOfUserFromDB = async (userId: string) => {
+const gerOrdersTotalPriceOfUserFromDB = async (userId: number) => {
+    if (!await User.isUserExist(userId)) {
+        throw new Error(`User Doesn't exist`)
+    }
     const totalPrice = await User.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(userId) }
+            $match: { userId }
         },
         {
             $unwind: "$orders"
