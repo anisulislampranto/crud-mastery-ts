@@ -50,15 +50,21 @@ const deleteUserFromDB = async (userId: number) => {
     return user
 }
 
-const createUserOrderOnDB = async (userId: string, data: TOrder) => {
-    const createdOrder = await User.updateOne({ _id: userId }, { $addToSet: { orders: data } })
+const createUserOrderOnDB = async (userId: number, data: TOrder) => {
+    if (!await User.isUserExist(userId)) {
+        throw new Error(`User Doesn't exist`)
+    }
+    const createdOrder = await User.updateOne({userId}, { $addToSet: { orders: data } })
     return createdOrder
 }
 
-const getUserOrdersFromDB = async (userId: string) => {
+const getUserOrdersFromDB = async (userId: number) => {
+    if (!await User.isUserExist(userId)) {
+        throw new Error(`User Doesn't exist`)
+    }
     const userOrders = await User.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(userId) }
+            $match: { userId }
         },
         {
             $project: { _id: 0, orders: 1 }

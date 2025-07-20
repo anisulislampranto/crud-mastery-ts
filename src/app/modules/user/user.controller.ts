@@ -95,17 +95,17 @@ const createOrder = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
 
-        await UserServices.createUserOrderOnDB(userId, req.body)
+        await UserServices.createUserOrderOnDB(Number(userId), req.body)
 
         res.status(200).json({
             success: true,
             message: 'Order Created Successfully!',
             data: null
         })
-    } catch (error) {
+    } catch (error: any) {
         res.status(403).json({
             success: false,
-            message: 'Failed to create order!',
+            message: error.message || 'Failed to create order!',
         })
     }
 }
@@ -113,17 +113,17 @@ const createOrder = async (req: Request, res: Response) => {
 const getUserOrders = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
-        const orders = await UserServices.getUserOrdersFromDB(userId)
+        const orders = await UserServices.getUserOrdersFromDB(Number(userId))
 
         res.status(200).json({
             success: true,
             message: 'Orders fetched successfully!',
             data: orders
         })
-    } catch (error) {
+    } catch (error: any) {
         res.status(403).json({
             success: false,
-            message: 'Failed to get user orders!',
+            message: error.message || 'Failed to get user orders!',
         })
     }
 }
