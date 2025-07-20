@@ -58,21 +58,17 @@ const updateUser = async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
         const userData = req.body;
-        const user = new User();
-        if (!await user.isUserExist(user.email)) {
-            throw new Error(`User Doesn't exist!`)
-        }
-        const updatedUser = await UserServices.updateUserFromDB(userId, userData)
+        const updatedUser = await UserServices.updateUserFromDB(Number(userId), userData)
         res.status(200).json({
             success: true,
             message: 'User updated successfully',
             data: updatedUser
         })
-    } catch (error) {
+    } catch (error: any) {
         console.log('error', error)
         res.status(403).json({
             success: false,
-            message: error,
+            message: error.message || 'Failed to update user',
         })
     }
 }

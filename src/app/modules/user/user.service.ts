@@ -34,8 +34,11 @@ const getUserFromDB = async (userId: number) => {
     return user
 }
 
-const updateUserFromDB = async (userId: string, userData: TUser) => {
-    const updatedUser = await User.findByIdAndUpdate(userId, userData, { new: true })
+const updateUserFromDB = async (userId: number, userData: TUser) => {
+    if (!await User.isUserExist(userId)) {
+        throw new Error(`User Doesn't exist`)
+    }
+    const updatedUser = User.findOneAndUpdate({userId: userId}, userData, { new: true }).select('-password')
     return updatedUser
 }
 
