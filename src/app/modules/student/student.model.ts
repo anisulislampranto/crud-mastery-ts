@@ -3,7 +3,16 @@ import { TGuardian, TLocalGuardian, TStudent, TUserName } from "./student.interf
 
 const userNameSchema = new Schema<TUserName>(
     {
-        firstName: { type: String, required: [true, 'first name is required'], maxlength: [20, 'First Name cannot be more then 20'], trim: true },
+        firstName: {
+            type: String, required: [true, 'first name is required'], maxlength: [20, 'First Name cannot be more then 20'], trim: true,
+            validate: {
+                validator: function (value: string) {
+                    const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1)
+                    return firstNameStr === value
+                },
+                message: '{VALUE} is not capitalized'
+            }
+        },
         middleName: { type: String, trim: true },
         lastName: { type: String, required: [true, 'last name is required'], trim: true },
     },
