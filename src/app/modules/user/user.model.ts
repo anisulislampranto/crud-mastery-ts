@@ -34,7 +34,7 @@ const userSchema = new Schema<TUser, UserModel>({
         type: String,
         required: true
     },
-    fullName: fullNameSchema,
+    fullName: { type: fullNameSchema, required: true },
     password: {
         type: String,
         required: true,

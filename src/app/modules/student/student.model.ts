@@ -3,9 +3,9 @@ import { TGuardian, TLocalGuardian, TStudent, TUserName } from "./student.interf
 
 const userNameSchema = new Schema<TUserName>(
     {
-        firstName: { type: String, required: true },
+        firstName: { type: String, required: [true, 'first name is required'] },
         middleName: { type: String },
-        lastName: { type: String, required: true },
+        lastName: { type: String, required: [true, 'last name is required'] },
     },
 );
 
@@ -35,7 +35,7 @@ const studentSchema = new Schema<TStudent>(
         name: { type: userNameSchema, required: true },
         email: { type: String, required: true, unique: true },
         avatar: { type: String },
-        gender: { type: String, enum: ["male", "female"], required: true },
+        gender: { type: String, enum: { values: ["male", "female", "other"], message: '{VALUE} is not valid gender' }, required: true },
         dateOfBirth: { type: String, required: true },
         contactNumber: { type: String, required: true },
         emergencyContactNo: { type: String, required: true },

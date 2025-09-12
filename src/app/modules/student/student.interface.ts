@@ -26,7 +26,7 @@ export type TStudent = {
     name: TUserName;
     email: string;
     avatar?: string;
-    gender: "male" | "female";
+    gender: "male" | "female" | 'other';
     dateOfBirth: string;
     contactNumber: string;
     emergencyContactNo: string;
