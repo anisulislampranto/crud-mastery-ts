@@ -5,7 +5,7 @@ import studentValidationSchema from "./student.validation";
 const createStudent = async (req: Request, res: Response) => {
     const { student: studentData } = req.body;
 
-    const { error } = studentValidationSchema.validate(studentData);
+    const { error, value } = studentValidationSchema.validate(studentData);
 
     if (error) {
         res.status(500).json({
@@ -16,7 +16,7 @@ const createStudent = async (req: Request, res: Response) => {
     }
 
     try {
-        const result = await StudentServices.createStudentIntoDB(studentData)
+        const result = await StudentServices.createStudentIntoDB(value)
 
         res.status(200).json({
             success: true,
@@ -24,7 +24,11 @@ const createStudent = async (req: Request, res: Response) => {
             data: result
         })
     } catch (error) {
-
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create student',
+            error: error
+        })
     }
 }
 
