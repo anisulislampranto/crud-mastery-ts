@@ -147,7 +147,7 @@ const gerOrdersTotalPriceOfUser = async (req: Request, res: Response) => {
     }
 }
 
-export const StudentControllers = {
+export const UserControllers = {
     createUser,
     getAllUsers,
     getUser,
