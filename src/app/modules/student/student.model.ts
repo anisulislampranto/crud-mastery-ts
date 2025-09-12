@@ -3,9 +3,9 @@ import { TGuardian, TLocalGuardian, TStudent, TUserName } from "./student.interf
 
 const userNameSchema = new Schema<TUserName>(
     {
-        firstName: { type: String, required: [true, 'first name is required'] },
-        middleName: { type: String },
-        lastName: { type: String, required: [true, 'last name is required'] },
+        firstName: { type: String, required: [true, 'first name is required'], maxlength: [20, 'First Name cannot be more then 20'], trim: true },
+        middleName: { type: String, trim: true },
+        lastName: { type: String, required: [true, 'last name is required'], trim: true },
     },
 );
 
