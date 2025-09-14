@@ -10,7 +10,7 @@ export type TGuardian = {
 
 export type TUserName = {
     firstName: string;
-    middleName: string;
+    middleName?: string;
     lastName: string;
 }
 
@@ -30,7 +30,7 @@ export type TStudent = {
     dateOfBirth: string;
     contactNumber: string;
     emergencyContactNo: string;
-    bloodGroup?: 'A+ | A- | B+ | B- | O+ | O- | AB+ | AB-';
+    bloodGroup?: 'A+' | "A-" | 'B+' | 'B-' | 'O+' | "O-" | 'AB+' | 'AB-';
     presentAddress: string;
     permanentAddress: string;
     guardian: TGuardian;

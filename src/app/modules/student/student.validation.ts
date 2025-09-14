@@ -1,67 +1,51 @@
-import Joi from 'joi';
+import { z } from "zod";
 
-const userNameValidationSchema = Joi.object({
-    firstName: Joi.string()
-        .required()
-        .max(20)
+// UserName Zod Schema
+const userNameZodSchema = z.object({
+    firstName: z
+        .string()
+        .max(20, "First Name cannot be more than 20 characters")
+        .nonempty("first name is required")
         .trim()
-        .custom((value, helpers) => {
-            const capitalized = value.charAt(0).toUpperCase() + value.slice(1);
-            if (capitalized !== value) {
-                return helpers.error('any.custom', { message: `${value} is not capitalized` });
-            }
-            return value;
-        }, 'Capitalization validation')
-        .messages({
-            'any.required': 'first name is required',
-            'string.max': 'First Name cannot be more than 20 characters',
-            'any.custom': '{#label} is not capitalized'
-        }),
-    middleName: Joi.string().trim().allow(''),
-    lastName: Joi.string()
-        .required()
-        .trim()
-        .messages({
-            'any.required': 'last name is required'
-        })
+        .refine(
+            (val) => val.charAt(0).toUpperCase() + val.slice(1) === val, { message: "First name must be capitalized" }
+        ),
+    middleName: z.string().trim().optional(),
+    lastName: z.string().nonempty("last name is required").trim(),
 });
 
-const guardianValidationSchema = Joi.object({
-    fatherName: Joi.string().required(),
-    fatherOccupation: Joi.string().required(),
-    fatherContactNo: Joi.string().required(),
-    motherName: Joi.string().required(),
-    motherOccupation: Joi.string().required(),
-    motherContactNo: Joi.string().required()
+const guardianZodSchema = z.object({
+    fatherName: z.string().nonempty("Father name is required"),
+    fatherOccupation: z.string().nonempty("Father occupation is required"),
+    fatherContactNo: z.string().nonempty("Father contact number is required"),
+    motherName: z.string().nonempty("Mother name is required"),
+    motherOccupation: z.string().nonempty("Mother occupation is required"),
+    motherContactNo: z.string().nonempty("Mother contact number is required"),
 });
 
-const localGuardianValidationSchema = Joi.object({
-    name: Joi.string().required(),
-    occupation: Joi.string().required(),
-    contactNo: Joi.string().required(),
-    address: Joi.string().required()
+const localGuardianZodSchema = z.object({
+    name: z.string().nonempty("Local guardian name is required"),
+    occupation: z.string().nonempty("Local guardian occupation is required"),
+    contactNo: z.string().nonempty("Local guardian contact number is required"),
+    address: z.string().nonempty("Local guardian address is required"),
 });
 
-const studentValidationSchema = Joi.object({
-    id: Joi.string().required(),
-    name: userNameValidationSchema.required(),
-    email: Joi.string().email().required(),
-    avatar: Joi.string().uri().allow(''),
-    gender: Joi.string().valid('male', 'female', 'other').required()
-        .messages({
-            'any.only': '{#value} is not valid gender'
-        }),
-    dateOfBirth: Joi.string().required(),
-    contactNumber: Joi.string().required(),
-    emergencyContactNo: Joi.string().required(),
-    bloodGroup: Joi.string().valid('A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-').allow(''),
-    presentAddress: Joi.string().required(),
-    permanentAddress: Joi.string().required(),
-    guardian: guardianValidationSchema.required(),
-    LocalGuardian: localGuardianValidationSchema.required(),
-    profileImage: Joi.string().uri().allow(''),
-    isActive: Joi.string().valid('active', 'inactive').default('active')
+export const studentZodValidationSchema = z.object({
+    id: z.string().nonempty("ID is required"),
+    name: userNameZodSchema,
+    email: z.email("Invalid email format"),
+    avatar: z.url("Invalid avatar URL").optional(),
+    gender: z.enum(["male", "female", "other"]),
+    dateOfBirth: z.string().nonempty("Date of birth is required"),
+    contactNumber: z.string().nonempty("Contact number is required"),
+    emergencyContactNo: z.string().nonempty("Emergency contact number is required"),
+    bloodGroup: z.enum(["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"]).optional(),
+    presentAddress: z.string().nonempty("Present address is required"),
+    permanentAddress: z.string().nonempty("Permanent address is required"),
+    guardian: guardianZodSchema,
+    LocalGuardian: localGuardianZodSchema,
+    profileImage: z.url("Invalid profile image URL").optional(),
+    isActive: z.enum(["active", "inactive"]).default("active"),
 });
 
-
-export default studentValidationSchema;
+export default studentZodValidationSchema;
